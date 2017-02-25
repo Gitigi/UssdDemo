@@ -16,13 +16,13 @@ account :
     - text : Balance
       next_screen : get_balance
     - text : Top up
-      next_screen : top_us
+      next_screen : top_up
 
 get_balance :
   type : http_screen
   http_request:
     method : get
-    url : "http://localhost:8003/get-balance"
+    url : "http://localhost:8003/get-balance?phoneNumber={{phone_number}}"
     verify : False
   session_key : user_balance
   next_screen : balance
@@ -31,22 +31,31 @@ balance :
   type : quit_screen
   text : Your balance is {{user_balance.balance}}
 
-top_us :
+top_up :
   type : menu_screen
   text : Choose your domination
   items :
     text : "Ksh {{key}} for {{value}} units"
-    value : "{{item}}"
-    next_screen : success
-    session_key: testing
+    value : "{{value}}"
+    next_screen : top_up_request
+    session_key: domination
     with_dict :
       10 : 3
       100 : 8
       1000 : 56
 
-success :
+top_up_request :
+  type : http_screen
+  http_request :
+    method : get
+    url : "http://localhost:8003/top-up?phoneNumber={{phone_number}}&domination={{domination}}"
+    verify : False
+  session_key : top_up_status
+  next_screen : top_up_success
+
+top_up_success :
   type : quit_screen
-  text : Opertion Successful bought {% for i in testing %} {{testing[i]}} {% endfor %} units
+  text : Top Successful bought {{domination}} units. New Balance is {{top_up_status.balance}}
 
 product_service :
   type : menu_screen

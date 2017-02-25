@@ -21,5 +21,6 @@ from core import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^get-balance',views.get_balance),
+    url(r'^top-up',views.top_up),
 	url(r'^ussd-endpoint',views.Sample.as_view()),
 ]
