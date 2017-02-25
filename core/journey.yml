@@ -1,0 +1,82 @@
+initial_screen: welcome
+
+welcome :
+  type : menu_screen
+  text : Home
+  options :
+    - text : My Account
+      next_screen : account
+    - text : Product And Services
+      next_screen : product_service
+
+account :
+  type : menu_screen
+  text : Account
+  options :
+    - text : Balance
+      next_screen : get_balance
+    - text : Top up
+      next_screen : top_us
+
+get_balance :
+  type : http_screen
+  http_request:
+    method : get
+    url : "http://localhost:8003/get-balance"
+    verify : False
+  session_key : user_balance
+  next_screen : balance
+
+balance :
+  type : quit_screen
+  text : Your balance is {{user_balance.balance}}
+
+top_us :
+  type : menu_screen
+  text : Choose your domination
+  items :
+    text : "Ksh {{key}} for {{value}} units"
+    value : "{{item}}"
+    next_screen : success
+    session_key: testing
+    with_dict :
+      10 : 3
+      100 : 8
+      1000 : 56
+
+success :
+  type : quit_screen
+  text : Opertion Successful bought {% for i in testing %} {{testing[i]}} {% endfor %} units
+
+product_service :
+  type : menu_screen
+  text : Product And Services
+  options :
+    - text : Dictionary
+      next_screen : dictionary
+
+dictionary :
+  type : input_screen
+  text : Enter word to search
+  input_identifier : word
+  next_screen : get_meaning
+
+
+get_meaning:
+  type: http_screen
+  http_request:
+    method: get
+    url:  'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/{{word.lower()}}'
+    headers:
+      app_id: "e97e9ef5"
+      app_key: "ece2dcacf30629b4df5a26670a9fc224"
+      content-type: application/json
+    verify: False
+  session_key: word_meaning
+  next_screen:  dictionary_result
+
+dictionary_result:
+  type : input_screen
+  text : "Meaning of {{word}}:\n{{word_meaning.get('results')[0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]}}.\nEnter new word to search"
+  input_identifier : word
+  next_screen : get_meaning
