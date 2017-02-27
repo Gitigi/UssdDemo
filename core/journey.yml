@@ -22,7 +22,7 @@ get_balance :
   type : http_screen
   http_request:
     method : get
-    url : "http://localhost:8003/get-balance?phoneNumber={{phone_number}}"
+    url : "http://localhost:8000/get-balance?phoneNumber={{phone_number}}"
     verify : False
   session_key : user_balance
   next_screen : balance
@@ -48,7 +48,7 @@ top_up_request :
   type : http_screen
   http_request :
     method : get
-    url : "http://localhost:8003/top-up?phoneNumber={{phone_number}}&domination={{domination}}"
+    url : "http://localhost:8000/top-up?phoneNumber={{phone_number}}&domination={{domination}}"
     verify : False
   session_key : top_up_status
   next_screen : top_up_success

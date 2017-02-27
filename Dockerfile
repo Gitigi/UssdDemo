@@ -1,4 +1,5 @@
 FROM python:3.6
+FROM postgres:9.6
 
 RUN mkdir /usr/src/app
 
